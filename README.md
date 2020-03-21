@@ -2,6 +2,13 @@
 
 NodeJS Rest API developed with Express.
 
+## Versions
+
+Each branch has a different version of the API:
+
+* **Master:** A NodeAPI that uses Express + Sequelize + MySQL
+* **Mongo:** A NodeAPI that uses Express + MongoDB
+
 ## Download and installation
 
 Download the project:
