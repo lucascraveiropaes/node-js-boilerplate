@@ -6,15 +6,15 @@ NodeJS Rest API developed with Express.
 
 Each branch has a different version of the API:
 
-* **Master:** A NodeAPI that uses Express + Sequelize + MySQL
-* **Mongo:** A NodeAPI that uses Express + MongoDB
+* **Master:** [A NodeAPI that uses Express + Sequelize + MySQL](https://github.com/lucascraveiropaes/node-js-boilerplate)
+* **Mongo:** [A NodeAPI that uses Express + MongoDB](https://github.com/lucascraveiropaes/node-js-boilerplate/tree/mongo)
 
 ## Download and installation
 
 Download the project:
 
 ```git
-git clone https://github.com/maksen-git/TOTAL-GESTAO_DE_FROTA-API.git
+git clone https://github.com/lucascraveiropaes/node-js-boilerplate.git
 ```
 
 Install all dependencies:

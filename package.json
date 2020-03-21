@@ -1,7 +1,7 @@
 {
 	"name": "total-api",
 	"version": "1.0.0",
-	"description": "API para o aplicativo e portal da empresa Total. Desenvolvido pela empresa BeijaFlore.",
+	"description": "NodeJS API Boilerplate - MySQL Version.",
 	"main": "app.js",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
