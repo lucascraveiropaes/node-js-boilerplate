@@ -1,6 +1,5 @@
 import express          from "express";
 import { sendEmail }    from "utils/General";
-import { User }         from "models";
 const router = express.Router();
 
 router.get("/", (req, res) => {

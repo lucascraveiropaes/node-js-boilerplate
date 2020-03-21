@@ -14,7 +14,7 @@ Each branch has a different version of the API:
 Download the project:
 
 ```git
-git clone https://github.com/maksen-git/TOTAL-GESTAO_DE_FROTA-API.git
+git clone https://github.com/lucascraveiropaes/node-js-boilerplate
 ```
 
 Install all dependencies:
@@ -34,64 +34,19 @@ npm run start
 
 ## Principais Dependências
 
-* [Sequelize](https://sequelize.org)
 * [Express](https://expressjs.com)
-* [Nodemailer](https://nodemailer.com/about)
-* [Mysql2](https://github.com/sidorares/node-mysql2)
-
-## Migrations
-
-Migrations are used to create database changes through scripts, not manual changes. The library used is the own [sequelize migration](https://sequelize.org/master/manual/migrations.html).
-
-**Create a migration**
-
-```bash
-npx sequelize migration:create --name=<nome-do-script>
-```
-
-Within the file created in the ```src/migrations``` folder, add the code for the required changes:
-
-```js
-'use strict';
-
-module.exports = {
-    up: (queryInterface, Sequelize) => {
-        return queryInterface.createTable("Users", {
-            id: {
-                allowNull: false,
-                autoIncrement: true,
-                primaryKey: true,
-                type: Sequelize.INTEGER,
-            },
-            createdAt: Sequelize.DATE,
-            updatedAt: Sequelize.DATE,
-        });
-    },
-
-    down: (queryInterface, Sequelize) => {
-        return queryInterface.dropTable("Users");
-    }
-};
-
-```
-
-**Execute migration**
-
-```bash
-npx sequelize db:migrate
-```
-
-**Undo the last migration**
-```
-npx sequelize-cli db:migrate:undo
-```
+* [MongoDB](https://github.com/mongodb/node-mongodb-native)
 
 ## Routes User
 
-|       Rota      | Método |     Descrição              |
-|-----------------|--------|----------------------------|
-| /               | GET    | [Home da API](#home)       |
-| /users/login    | POST   | [Login](#login)            |
+|     Rota     | Método |     Descrição              |
+|--------------|--------|----------------------------|
+| /            | GET    | [Home da API](#home)       |
+| /users/login | POST   | [Login](#login)            |
+| /users       | GET    | [Listar Users](#listar-users)|
+| /users       | POST   | [Adicionar User](#adicionar-users)|
+| /users/:id   | DELETE | [Deletar User Pelo ID](#deletar-user-pelo-id)|
+| /users/      | PUT    | [Atualizar Dados](#atualizar-dados)|
 
 -----------------------------------------------------
 
@@ -124,10 +79,24 @@ POST /users/login
 }
 ```
 
-**Header Example**
+**Resposta**
 
 ```json
-client-key: ++6sdfs21cs65dc4s2df12
+{
+    "status": true,
+    "user": {
+        "_id": "5e5d70461c9d440000708b0b",
+        "name": "Lucas Craveiro Paes",
+        "login": "lucascraveiropaes"
+    }
+}
+```
+-----------------------------------------------------
+
+### Listar Users
+
+```
+GET /users
 ```
 
 **Resposta**
@@ -135,14 +104,97 @@ client-key: ++6sdfs21cs65dc4s2df12
 ```json
 {
     "status": true,
-    "user": {
-        "id": 1,
-        "name": "User Full Name",
-        "email": "user_email@gmail.com",
-        "token": "b1O3KBTGPg(...@FgWw0w3l9",
-        "clientKey": "++6sdfs21cs65dc4s2df12",
-        "createdAt": "2019-09-07T03:27:25.000Z",
-        "updatedAt": "2019-09-07T06:28:49.000Z"
-    }
+    "data": [{
+        "_id": "5e5d70461c9d440000708b0b",
+        "name": "Lucas Craveiro Paes",
+        "login": "lucascraveiropaes"
+    }, {
+        "_id": "5e5e6ad41c9d44000017b791",
+        "name": "Beatriz Rocha",
+        "login": "bearocha"
+    }, {
+        "_id": "5e6925937da1ce18080b538b",
+        "name": "Banana",
+        "login": "loginbanana"
+    }]
+}
+```
+
+-----------------------------------------------------
+
+### Adicionar Users
+
+```
+POST /users
+```
+
+**Body**
+
+```json
+{
+	"name": "Banana",
+	"login": "loginbanana"
+}
+```
+
+**Resposta**
+
+```json
+{
+    "status": true,
+    "data": [{
+        "name": "Banana",
+        "login": "loginbanana",
+        "password": "BA3253876AED6BC22D4A6FF53D8406C6AD864195ED144AB5C87621B6C233B548BAEAE6956DF346EC8C17F5EA10F35EE3CBC514797ED7DDD3145464E2A0BAB413",
+        "token": null,
+        "_id": "5e6925937da1ce18080b538b"
+    }]
+}
+```
+
+-----------------------------------------------------
+
+### Deletar User Pelo ID
+
+```
+DELETE /users/:id
+```
+
+**Exemplo**
+```
+DELETE /users/5e6925937da1ce18080b538b
+```
+
+**Resposta**
+
+```json
+{
+    "status": true,
+    "message": "Usuário deletado com sucesso!"
+}
+```
+
+
+-----------------------------------------------------
+
+### Atualizar Dados
+
+```
+PUT /users/
+```
+
+**Body**
+```json
+{
+    "name": "New name for user"
+}
+```
+
+**Resposta**
+
+```json
+{
+    "status": true,
+    "message": "Dados atualizados com sucesso!"
 }
 ```

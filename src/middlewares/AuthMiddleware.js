@@ -1,4 +1,4 @@
-import { User } from "models";
+import User from "dao/User";
 
 const whitelist = ["/", "/test"];
 const invalidAccessResponse = {
@@ -10,27 +10,20 @@ async function AuthMiddleware(req, res, next) {
     if (whitelist.includes(req.originalUrl))
         return next();
 
-    if (typeof req.headers["client-key"] === "undefined")
-        return res.status(403).send(invalidAccessResponse);
-
     if (req.originalUrl === "/users/login")
         return next();
 
-    if (typeof req.headers["x-auth-token"] === "undefined")
-        return res.status(403).send(invalidAccessResponse);
-
-    const clientKey = req.headers["client-key"];
     const token = req.headers["x-auth-token"];
 
-    const user = await User.findOne({
-        where: {
-            clientKey,
-            token
-        }
-    });
+    if (typeof token === "undefined" || token === null)
+        return res.status(403).send(invalidAccessResponse);
+
+    const user = await User.findOne({ token });
 
     if (user === null)
         return res.status(403).send(invalidAccessResponse);
+
+    req.midd = { user };
 
     return next();
 }

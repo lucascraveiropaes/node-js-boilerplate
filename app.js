@@ -3,12 +3,13 @@ import cors             from "cors";
 import bodyParser       from "body-parser";
 import * as Routes      from "routes";
 import AuthMiddleware   from "middlewares/AuthMiddleware";
+import Database         from "utils/Database";
 
 const app = express();
 const PORT = 5000;
 
-app.use( bodyParser.json() );
-app.use( bodyParser.urlencoded({ extended: false }) );
+app.use( bodyParser.json({ limit: "100mb" }) );
+app.use( bodyParser.urlencoded({ limit: "100mb", extended: true }) );
 app.use( cors() );
 app.use( AuthMiddleware );
 
@@ -19,7 +20,15 @@ for (let route in Routes) {
     }
 }
 
-app.listen(PORT, () => {
-    console.clear();
-    console.log(`Server running on port ${PORT}`)
+// 404 Error Handler
+app.use((req, res) => {
+    res.status(404);
+    return res.send({ status: false, error: 404 });
+});
+
+Database(() => {
+    app.listen(PORT, () => {
+        console.clear();
+        console.log(`Server running on port ${PORT}`)
+    });
 });

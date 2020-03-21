@@ -1,55 +1,37 @@
-import * as UserUtils from "utils/User";
+import { sha512 }        from "js-sha512";
 import * as GeneralUtils from "utils/General";
-import { User } from "models";
+import * as UserUtils    from "utils/User";
+import User              from "dao/User";
 
-let response = {
+const errorMessage = part => `Não foi possível ${part} no momento. Entre em contato com o suporte para corrigir esse erro.`;
+const errorResponse = {
     status: false,
     message: "Erro no servidor"
 };
+let response = errorResponse;
 
 class UserController {
     async login(req, res) {
         try {
-            let data = req.body;
+            const { login, password } = req.body;
 
-            if (UserUtils.validateUserLogin(data) === false) {
+            if (UserUtils.validateUserLogin(req.body) === false) {
                 response.message = "Informe os dados corretamente";
                 return res.status(400).send(response);
             }
 
             const user = await User.findOne({
-                where: {
-                    email: data.login,
-                    password: data.password
-                }
+                login, password
             });
 
             if (user !== null) {
-                const clientKey = req.headers["client-key"];
-                const token = GeneralUtils.generateToken();
+                const token = await UserUtils.updateToken(user._id);
 
-                const result = await UserUtils.updateTokenAndKey(
-                    clientKey,
-                    token,
-                    user.id
-                );
-
-                if (result) {
-                    // The code above, is an example of how the email
-                    // function can be simply used on the project
-                    // GeneralUtils.sendEmail({
-                    //     to: user.login,
-                    //     subject: "New access with your account",
-                    //     html: `Your account has been accessed at ${GeneralUtils.getDatetime(user.updatedAt)}`
-                    // });
-
+                if (token) {
                     response.message = `Seja bem vindo, ${user.name}`;
-                    response.user = user.get({ plain: true });
+                    response.user = user;
                     response.status = true;
                     response.user.token = token;
-                    response.user.clientKey = clientKey;
-                    delete response.message;
-                    delete response.user.status;
                     delete response.user.password;
                     return res.status(200).send(response);
                 } else {
@@ -66,12 +48,107 @@ class UserController {
             return res.status(200).send(response);
         } catch (e) {
             console.log(e);
-            response = {
-                status: false,
-                message: "Erro no servidor"
-            };
+            return res.status(500).send(errorResponse);
+        }
+    }
 
-            return res.status(500).send(response);
+    async newUser(req, res) {
+        try {
+            const { name, login } = req.body;
+
+            if (!name || !login) {
+                response.message = "Informe os dados corretamente";
+                return res.status(400).send(response);
+            }
+
+            const user = await User.insert({
+                name,
+                login,
+                password: sha512("123456").toUpperCase(),
+                token: null
+            });
+
+            if (!user) {
+                response.message = errorMessage("adicionar um novo usuário");
+                return res.status(500).send(response);
+            }
+
+            let userData = user.ops;
+            delete userData.password;
+
+            return res.status(200).send({
+                status: true,
+                data: userData
+            });
+        } catch (e) {
+            console.log(e);
+            return res.status(500).send(errorResponse);
+        }
+    }
+
+    async listUsers(req, res) {
+        try {
+            const users = await User.findBy();
+
+            if (!users) {
+                response.message = errorMessage("buscar a lista de usuários");
+                return res.status(500).send(response);
+            }
+
+            return res.status(200).send({
+                status: true,
+                data: users.map(u => ({
+                    _id: u._id,
+                    name: u.name,
+                    login: u.login
+                }))
+            });
+        } catch (e) {
+            console.log(e);
+            return res.status(500).send(errorResponse);
+        }
+    }
+
+    async updateUser(req, res) {
+        try {
+            const { user } = req.midd;
+            const data = req.body;
+
+            const status = await User.updateByID(user._id, data);
+
+            if (!status) {
+                response.message = errorMessage("atualizar os dados");
+                return res.status(500).send(response);
+            }
+
+            return res.status(200).send({
+                status: true,
+                message: "Dados atualizados com sucesso!"
+            });
+        } catch (e) {
+            console.log(e);
+            return res.status(500).send(errorResponse);
+        }
+    }
+
+    async deleteUser(req, res) {
+        try {
+            const { userID } = req.params;
+
+            const status = await User.deleteByID(userID);
+
+            if (!status) {
+                response.message = errorMessage("deletar o usuário");
+                return res.status(500).send(response);
+            }
+
+            return res.status(200).send({
+                status: true,
+                message: "Usuário deletado com sucesso!"
+            });
+        } catch (e) {
+            console.log(e);
+            return res.status(500).send(errorResponse);
         }
     }
 }

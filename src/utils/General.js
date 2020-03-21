@@ -1,5 +1,3 @@
-import nodemailer from "nodemailer";
-
 export function generateToken(size = 190) {
     let token = "";
     let codeAlphabet  = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -11,31 +9,6 @@ export function generateToken(size = 190) {
         token += codeAlphabet[parseInt(Math.random() * codeAlphabet.length)];
 
     return token;
-}
-
-export function sendEmail(options, callback = () => null) {
-    const sender = "someemail@gmail.com";
-    const transporter = nodemailer.createTransport({
-        host: "smtp.gmail.com",
-        port: 465,
-        secure: true,
-        auth: {
-            user: sender,
-            pass: "sompassword"
-        },
-        tls: {
-            rejectUnauthorized: false
-        }
-    });
-
-    options.from = `"Some sender name here" <${ sender }>`;
-
-    transporter.sendMail(options, function(error, info) {
-        if (error)
-            return callback(true, error);
-
-        return callback(false, info);
-    });
 }
 
 export function getDatetime(d = new Date()) {

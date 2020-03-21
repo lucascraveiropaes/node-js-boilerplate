@@ -1,4 +1,5 @@
-import { User } from "models";
+import * as GeneralUtils from "utils/General";
+import User              from "dao/User";
 
 export function validateUserLogin(data) {
     return !(
@@ -9,18 +10,14 @@ export function validateUserLogin(data) {
     );
 }
 
-export async function updateTokenAndKey(clientKey, token, userId) {
+export async function updateToken(id, token = GeneralUtils.generateToken()) {
     try {
-        const updateStatus = await User.update({
-            clientKey,
-            token,
-        }, {
-            where: {
-                id: userId
-            }
-        });
+        const updateStatus = await User.updateByID(id, { token });
 
-        return !!updateStatus;
+        if (!!updateStatus)
+            return token;
+
+        return false;
     } catch (e) {
         console.log(e);
         return false;
