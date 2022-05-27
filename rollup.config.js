@@ -12,7 +12,7 @@ const customResolver = resolve({
 
 export default {
 	input: "src/index.js",
-	external: Object.keys(pkg.peerDependencies),
+	external: Object.keys(pkg.peerDependencies || {}),
 	output: [{
     file: path.join(pkg.output, "index.cjs.js"),
     format: "cjs"
