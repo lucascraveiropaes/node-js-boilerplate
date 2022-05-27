@@ -3,4 +3,4 @@
 /dist
 db.json
 .DS_Store
-.env
+# .env
