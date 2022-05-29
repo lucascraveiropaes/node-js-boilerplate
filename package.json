@@ -1,32 +1,60 @@
 {
-  "name": "@lucascraveiropaes/node-boilerplate",
+  "name": "@discovery-solutions/node-js-boilerplate",
+  "productName": "NodeJS Boilerplate",
   "version": "1.0.0",
-  "description": "A Boilerplate for NodeJS Projects",
+  "description": "NodeJS Boilerplate",
   "author": "Lucas Craveiro Paes",
-  "main": "dist/index.cjs.js",
-  "module": "dist/index.esm.js",
-  "output": "dist/",
   "license": "ISC",
-  "homepage": "https://github.com/lucascraveiropaes/node-boilerplate",
+  "main": "server/esm.js",
   "scripts": {
-    "start": "NODE_PATH=./src/ nodemon --exec babel-node --experimental-vm-modules --config nodemon.config.json ",
-    "dev": "npm run start ./src/index.js",
-    "build": "rm -R dist & rollup -c"
+    "electron": "wait-on tcp:3000 && nodemon ./node_modules/electron/cli.js .",
+    "dev": "concurrently -k \"BROWSER=none npm start\" \"npm:electron\"",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
   },
+  "keywords": [
+    "Discovery Solutions",
+    "Discovery",
+    "Solutions",
+    "Electron",
+    "NodeJS",
+    "Boilerplate"
+  ],
   "devDependencies": {
-    "@babel/cli": "^7.17.6",
-    "@babel/core": "^7.17.9",
-    "@babel/node": "^7.16.8",
-    "@babel/plugin-transform-runtime": "^7.17.10",
-    "@babel/preset-env": "^7.16.11",
-    "@rollup/plugin-alias": "^3.1.9",
-    "@rollup/plugin-babel": "^5.3.1",
-    "@rollup/plugin-commonjs": "^22.0.0",
-    "@rollup/plugin-node-resolve": "^13.3.0",
-    "nodemon": "^2.0.15",
-    "rollup-plugin-terser": "^7.0.2"
+    "@babel/core": "^7.18.2",
+    "@babel/node": "^7.17.10",
+    "concurrently": "^5.2.0",
+    "electron": "^19.0.0",
+    "electron-is-dev": "^2.0.0",
+    "esm": "^3.2.25",
+    "nodemon": "^2.0.16",
+    "wait-on": "^5.1.0"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   },
   "dependencies": {
-    "dotenv": "^16.0.1"
+    "react": "^18.1.0",
+    "react-dom": "^18.1.0",
+    "react-router-dom": "^6.3.0",
+    "react-scripts": "^5.0.1",
+    "styled-components": "^5.3.5"
   }
 }
