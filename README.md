@@ -9,6 +9,7 @@ There are 3 versions of this boilerplate available:
 | Raw Project | [Main Branch](https://github.com/lucascraveiropaes/node-js-boilerplate) |
 | Express | [Express Branch](https://github.com/lucascraveiropaes/node-js-boilerplate/tree/express) |
 | JSON Server | ```This Branch``` |
+| Electron | [Electron Branch](https://github.com/lucascraveiropaes/node-js-boilerplate/tree/electron) |
 
 ## Scripts
 
